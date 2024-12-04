@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=4 uid="uid://bauwoky2yjtba"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_4s1q2"]
+[ext_resource type="Shader" path="res://white.gdshader" id="1_xwe34"]
+[ext_resource type="Texture2D" uid="uid://88knuobdec1r" path="res://pixel.png" id="2_1ig05"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ne3or"]
+shader = ExtResource("1_xwe34")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7x0t8"]
+texture = ExtResource("2_1ig05")
+texture_region_size = Vector2i(1, 1)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_1ppaa"]
+tile_size = Vector2i(1, 1)
+sources/2 = SubResource("TileSetAtlasSource_7x0t8")
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_4s1q2")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+material = SubResource("ShaderMaterial_ne3or")
+tile_map_data = PackedByteArray("AAANABQAAgAAAAAAAAAMABQAAgAAAAAAAAALABQAAgAAAAAAAAALABUAAgAAAAAAAAAKABUAAgAAAAAAAAAKABYAAgAAAAAAAAAJABYAAgAAAAAAAAAIABYAAgAAAAAAAAAHABcAAgAAAAAAAAAGABcAAgAAAAAAAAAFABcAAgAAAAAAAAAEABcAAgAAAAAAAAAEABgAAgAAAAAAAAAEABkAAgAAAAAAAAAEABoAAgAAAAAAAAAEABsAAgAAAAAAAAAFABsAAgAAAAAAAAAFABwAAgAAAAAAAAAGABwAAgAAAAAAAAAHAB0AAgAAAAAAAAAIAB0AAgAAAAAAAAAIAB4AAgAAAAAAAAAJAB4AAgAAAAAAAAAKAB8AAgAAAAAAAAALAB8AAgAAAAAAAAAMAB8AAgAAAAAAAAANAB8AAgAAAAAAAAAOAB8AAgAAAAAAAAAOACAAAgAAAAAAAAAPACAAAgAAAAAAAAAQACAAAgAAAAAAAAARACAAAgAAAAAAAAARAB8AAgAAAAAAAAASAB4AAgAAAAAAAAASAB0AAgAAAAAAAAATABwAAgAAAAAAAAAUABsAAgAAAAAAAAAUABoAAgAAAAAAAAAVABoAAgAAAAAAAAAVABkAAgAAAAAAAAAWABgAAgAAAAAAAAAWABcAAgAAAAAAAAAWABYAAgAAAAAAAAAVABUAAgAAAAAAAAAVABQAAgAAAAAAAAAUABQAAgAAAAAAAAAUABMAAgAAAAAAAAATABIAAgAAAAAAAAATABEAAgAAAAAAAAATABAAAgAAAAAAAAAUAA8AAgAAAAAAAAAVAA4AAgAAAAAAAAAWAA4AAgAAAAAAAAAXAA4AAgAAAAAAAAAYAA4AAgAAAAAAAAAZAA4AAgAAAAAAAAAZAA0AAgAAAAAAAAAaAA0AAgAAAAAAAAAaAA4AAgAAAAAAAAAbAA4AAgAAAAAAAAAcAA8AAgAAAAAAAAAcABAAAgAAAAAAAAAdABAAAgAAAAAAAAAdABEAAgAAAAAAAAAdABIAAgAAAAAAAAAdABMAAgAAAAAAAAAeABMAAgAAAAAAAAAeABQAAgAAAAAAAAAeABUAAgAAAAAAAAAfABYAAgAAAAAAAAAfABcAAgAAAAAAAAAfABgAAgAAAAAAAAAfABkAAgAAAAAAAAAfABoAAgAAAAAAAAA=")
+tile_set = SubResource("TileSet_1ppaa")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -128
+follow_viewport_enabled = true
+follow_viewport_scale = 1000.0
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Camera" type="Camera2D" parent="."]
+zoom = Vector2(2.57, 2.57)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
