@@ -19,7 +19,8 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) or \
+				Input.is_action_pressed("move"):
 			$Camera.position -= event.screen_relative / $Camera.zoom
 
 	if event is InputEventMouseButton:
