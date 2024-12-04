@@ -17,10 +17,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Create the build directory first to ensure it exists
-    - name: Create build directory
-      run: mkdir -p build/web
-
     - name: Export game
       id: export
       uses: firebelley/godot-export@v6.0.0
@@ -30,14 +26,16 @@ jobs:
         relative_project_path: ./
         archive_output: false
         export_debug: false
+        export_preset_name: "Web"  # Make sure this matches your preset name exactly
 
     # Debug step to verify the export
-    - name: Verify export
+    - name: Debug file locations
       run: |
-        echo "Content of build directory:"
-        ls -la build/
-        echo "Content of build/web directory:"
-        ls -la build/web/
+        echo "Current directory structure:"
+        find . -type f
+        echo "-------------------"
+        echo "Export preset name: Web"
+        echo "Expected path: build/web/index.html"
 
     - name: Deploy to web branch
       run: |
@@ -48,14 +46,24 @@ jobs:
         git checkout --orphan web
         git reset --hard
         
-        # Remove everything except build/web contents
-        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'build' -exec rm -rf {} +
+        # Check for files in both potential locations
+        if [ -d "./build/web" ]; then
+          echo "Files found in ./build/web"
+          cp -r ./build/web/* .
+        elif [ -d ".godot/exported/web" ]; then
+          echo "Files found in .godot/exported/web"
+          cp -r .godot/exported/web/* .
+        else
+          echo "No web export files found in expected locations"
+          echo "Current directory contents:"
+          ls -la
+          exit 1
+        fi
         
-        # Move the contents of build/web to root
-        mv build/web/* .
-        rm -rf build
+        # Clean up directories we don't need
+        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'index.html' ! -name '*.js' ! -name '*.wasm' ! -name '*.pck' -exec rm -rf {} +
         
-        # Add and commit the web files
+        # Add all web files
         git add -A
         git commit -m "Deploy web build"
         
