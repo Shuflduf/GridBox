@@ -1,0 +1,31 @@
+name: Godot Web Export
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow on
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Godot
+      uses: firebelley/setup-godot@v1
+      with:
+        godot-version: '4.3' # Change to your Godot version
+
+    - name: Export project to HTML5
+      run: godot --export "HTML5" build/index.html
+
+    - name: Deploy to web branch
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout -b web
+        git add -f build/
+        git commit -m "Automated web export"
+        git push -f origin web
