@@ -17,58 +17,59 @@ jobs:
       with:
         fetch-depth: 0
 
+    # Download and setup Godot
+    - name: Download Godot
+      run: |
+        wget https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+        unzip Godot_v4.3-stable_linux.x86_64.zip
+        mv Godot_v4.3-stable_linux.x86_64 godot
+        chmod +x godot
+
+    # Download and setup export templates
+    - name: Download Export Templates
+      run: |
+        wget https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+        mkdir -p ~/.local/share/godot/export_templates/4.3-stable
+        unzip Godot_v4.3-stable_export_templates.tpz
+        mv templates/* ~/.local/share/godot/export_templates/4.3-stable/
+
+    # Create build directory
     - name: Create build directory
       run: mkdir -p build/web
 
-    - name: Export game
-      id: export
-      uses: firebelley/godot-export@v6.0.0
-      with:
-        godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
-        godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
-        relative_project_path: ./
-        archive_output: false
-        export_debug: false
-        export_preset_name: "Web"
-        export_path: "build/web"
-
-    # Debug steps to understand what's happening
-    - name: Debug Export
+    # Export the project
+    - name: Export project
       run: |
-        echo "Project structure:"
-        ls -R
-        
-        echo "\nExport preset contents:"
-        cat export_presets.cfg
-        
-        echo "\nBuild directory contents:"
-        ls -la build/web/ || echo "build/web/ does not exist"
-        
-        echo "\nGodot exported directory contents:"
-        ls -la .godot/exported/ || echo ".godot/exported/ does not exist"
+        ./godot --headless --export-release "Web" build/web/index.html
+        echo "Export complete. Checking results:"
+        ls -la build/web/
 
     - name: Deploy to web branch
-      if: success()
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Check if export was successful
+        if [ ! -f "build/web/index.html" ]; then
+          echo "Export failed - index.html not found"
+          exit 1
+        fi
         
         # Create and switch to an orphan web branch
         git checkout --orphan web
         git reset --hard
         
-        if [ -d "build/web" ]; then
-          # Copy web files to root
-          cp -r build/web/* .
-          
-          # Clean up
-          rm -rf build
-          
-          # Add and commit
-          git add -A
-          git commit -m "Deploy web build"
-          git push -f origin web
-        else
-          echo "No web build found in build/web/"
-          exit 1
-        fi
+        # Copy web files to root
+        cp -r build/web/* .
+        
+        # Remove everything except web files
+        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'index.html' ! -name '*.js' ! -name '*.wasm' ! -name '*.pck' -exec rm -rf {} +
+        
+        # Add and commit
+        git add -A
+        echo "Files to be committed:"
+        git status
+        git commit -m "Deploy web build"
+        
+        # Force push to web branch
+        git push -f origin web
