@@ -24,11 +24,15 @@ jobs:
         relative_project_path: ./
         archive_output: true
 
+    - name: List directory contents (debug)
+      run: ls -R
+
     - name: Deploy to web branch
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git checkout -b web
+        ls build/  # Check if the build directory exists
         git add -f build/
         git commit -m "Automated web export"
         git push -f origin web
