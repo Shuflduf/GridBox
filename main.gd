@@ -5,7 +5,7 @@ var playing = false:
 		playing = value
 		$CanvasLayer/UI.label.visible = !value
 
-var generation_update = 1.0
+var generation_update = 0.2
 var time_generation = 0.0
 
 func _ready() -> void:
@@ -47,19 +47,17 @@ func update_cells():
 	var calculating_cell_pos = get_all_useful_cells()
 	var new_cell_pos: Array[Vector2i] = []
 	for cell in calculating_cell_pos:
-		print(cell)
 		var radius = 1
 		var square = range(-radius, radius + 1)
 		var neighbor_count = 0
 		for x in square:
 			for y in square:
 				var check_pos = cell + Vector2i(x, y)
-				print("Checking: ", check_pos)
 				if check_pos != cell:
 					if check_pos in alive_cells:
 						neighbor_count += 1
 		if cell in alive_cells:
-			if neighbor_count in range(2, 3 + 1):
+			if neighbor_count in [2, 3]:
 				new_cell_pos.append(cell)
 		else:
 			if neighbor_count == 3:
@@ -72,15 +70,15 @@ func update_cells():
 func get_all_useful_cells() -> Array[Vector2i]:
 	var tilemap: TileMapLayer = $TileMap
 	var alive_cells = tilemap.get_used_cells()
-	var final: Array[Vector2i] = alive_cells
+	var final: Array[Vector2i] = alive_cells.duplicate()
 	for cell in alive_cells:
+		print(cell)
 		var radius = 1
 		var square = range(-radius, radius + 1)
 		for x in square:
 			for y in square:
 				var check_pos = cell + Vector2i(x, y)
-				print(check_pos)
-				if !check_pos in final:
+				if check_pos not in final:
 					final.append(check_pos)
 	
 	print(final)
