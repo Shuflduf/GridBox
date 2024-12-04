@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
   
     - name: Create build directory
-      run: mkdir -p build
+      run: mkdir -p build/web
 
     - name: Export game
       id: export
