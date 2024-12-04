@@ -17,6 +17,9 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Create build directory
+      run: mkdir -p build/web
+
     - name: Export game
       id: export
       uses: firebelley/godot-export@v6.0.0
@@ -26,18 +29,26 @@ jobs:
         relative_project_path: ./
         archive_output: false
         export_debug: false
-        export_preset_name: "Web"  # Make sure this matches your preset name exactly
+        export_preset_name: "Web"
+        export_path: "build/web"
 
-    # Debug step to verify the export
-    - name: Debug file locations
+    # Debug steps to understand what's happening
+    - name: Debug Export
       run: |
-        echo "Current directory structure:"
-        find . -type f
-        echo "-------------------"
-        echo "Export preset name: Web"
-        echo "Expected path: build/web/index.html"
+        echo "Project structure:"
+        ls -R
+        
+        echo "\nExport preset contents:"
+        cat export_presets.cfg
+        
+        echo "\nBuild directory contents:"
+        ls -la build/web/ || echo "build/web/ does not exist"
+        
+        echo "\nGodot exported directory contents:"
+        ls -la .godot/exported/ || echo ".godot/exported/ does not exist"
 
     - name: Deploy to web branch
+      if: success()
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -46,26 +57,18 @@ jobs:
         git checkout --orphan web
         git reset --hard
         
-        # Check for files in both potential locations
-        if [ -d "./build/web" ]; then
-          echo "Files found in ./build/web"
-          cp -r ./build/web/* .
-        elif [ -d ".godot/exported/web" ]; then
-          echo "Files found in .godot/exported/web"
-          cp -r .godot/exported/web/* .
+        if [ -d "build/web" ]; then
+          # Copy web files to root
+          cp -r build/web/* .
+          
+          # Clean up
+          rm -rf build
+          
+          # Add and commit
+          git add -A
+          git commit -m "Deploy web build"
+          git push -f origin web
         else
-          echo "No web export files found in expected locations"
-          echo "Current directory contents:"
-          ls -la
+          echo "No web build found in build/web/"
           exit 1
         fi
-        
-        # Clean up directories we don't need
-        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'index.html' ! -name '*.js' ! -name '*.wasm' ! -name '*.pck' -exec rm -rf {} +
-        
-        # Add all web files
-        git add -A
-        git commit -m "Deploy web build"
-        
-        # Force push to web branch
-        git push -f origin web
