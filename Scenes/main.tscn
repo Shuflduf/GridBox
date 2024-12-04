@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://bauwoky2yjtba"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_4s1q2"]
-[ext_resource type="Shader" path="res://white.gdshader" id="1_xwe34"]
-[ext_resource type="Texture2D" uid="uid://88knuobdec1r" path="res://pixel.png" id="2_1ig05"]
-[ext_resource type="PackedScene" uid="uid://cuvgqa6px7l7u" path="res://ui.tscn" id="5_ixdv2"]
+[ext_resource type="Script" path="res://Scripts/main.gd" id="1_4s1q2"]
+[ext_resource type="Shader" path="res://Resources/white.gdshader" id="1_xwe34"]
+[ext_resource type="Texture2D" uid="uid://88knuobdec1r" path="res://Resources/pixel.png" id="2_1ig05"]
+[ext_resource type="PackedScene" uid="uid://cuvgqa6px7l7u" path="res://Scenes/ui.tscn" id="5_ixdv2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ne3or"]
 shader = ExtResource("1_xwe34")

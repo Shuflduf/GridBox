@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://deb7182c7c35n"]
 
-[ext_resource type="Script" path="res://value_handler.gd" id="1_x5444"]
+[ext_resource type="Script" path="res://Scripts/value_handler.gd" id="1_x5444"]
 
 [node name="ValueHandler" type="HBoxContainer"]
 script = ExtResource("1_x5444")
