@@ -25,13 +25,17 @@ jobs:
         mv Godot_v4.3-stable_linux.x86_64 godot
         chmod +x godot
 
-    # Download and setup export templates
+    # Download and setup export templates with correct path
     - name: Download Export Templates
       run: |
         wget https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
-        mkdir -p ~/.local/share/godot/export_templates/4.3-stable
+        mkdir -p ~/.local/share/godot/export_templates/4.3.stable
         unzip Godot_v4.3-stable_export_templates.tpz
-        mv templates/* ~/.local/share/godot/export_templates/4.3-stable/
+        mv templates/* ~/.local/share/godot/export_templates/4.3.stable/
+        
+        # Debug: Check template directory contents
+        echo "Template directory contents:"
+        ls -la ~/.local/share/godot/export_templates/4.3.stable/
 
     # Create build directory
     - name: Create build directory
@@ -40,20 +44,21 @@ jobs:
     # Export the project
     - name: Export project
       run: |
-        ./godot --headless --export-release "Web" build/web/index.html
+        echo "Exporting project..."
+        ./godot --headless --verbose --export-release "Web" build/web/index.html || {
+          echo "Export failed. Template directory contents:"
+          ls -la ~/.local/share/godot/export_templates/4.3.stable/
+          exit 1
+        }
+        
         echo "Export complete. Checking results:"
         ls -la build/web/
 
     - name: Deploy to web branch
+      if: success()
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Check if export was successful
-        if [ ! -f "build/web/index.html" ]; then
-          echo "Export failed - index.html not found"
-          exit 1
-        fi
         
         # Create and switch to an orphan web branch
         git checkout --orphan web
