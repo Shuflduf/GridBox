@@ -15,8 +15,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Fetch all history for proper branch handling
-  
+        fetch-depth: 0
+
+    # Create the build directory first to ensure it exists
+    - name: Create build directory
+      run: mkdir -p build/web
+
     - name: Export game
       id: export
       uses: firebelley/godot-export@v6.0.0
@@ -24,9 +28,16 @@ jobs:
         godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
         godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
         relative_project_path: ./
-        archive_output: false  # Set to false as we don't need archives
+        archive_output: false
         export_debug: false
-        export_format: "web"
+
+    # Debug step to verify the export
+    - name: Verify export
+      run: |
+        echo "Content of build directory:"
+        ls -la build/
+        echo "Content of build/web directory:"
+        ls -la build/web/
 
     - name: Deploy to web branch
       run: |
@@ -37,15 +48,15 @@ jobs:
         git checkout --orphan web
         git reset --hard
         
-        # Remove everything except the exported web files
-        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'builds' -exec rm -rf {} +
+        # Remove everything except build/web contents
+        find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'build' -exec rm -rf {} +
         
-        # Move web build files to root
-        mv builds/web/* .
-        rm -rf builds
+        # Move the contents of build/web to root
+        mv build/web/* .
+        rm -rf build
         
-        # Add all web files
-        git add .
+        # Add and commit the web files
+        git add -A
         git commit -m "Deploy web build"
         
         # Force push to web branch
