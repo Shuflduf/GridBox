@@ -15,6 +15,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
   
+    - name: Create build directory
+      run: mkdir -p build
+
     - name: Export game
       id: export
       uses: firebelley/godot-export@v6.0.0
@@ -32,7 +35,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git checkout -b web
-        ls build/  # Check if the build directory exists
+        ls build/  # Check if the build directory exists and has contents
         git add -f build/
         git commit -m "Automated web export"
         git push -f origin web
