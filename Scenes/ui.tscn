@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cuvgqa6px7l7u"]
+[gd_scene load_steps=6 format=3 uid="uid://cuvgqa6px7l7u"]
 
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="1_f08p7"]
 [ext_resource type="LabelSettings" uid="uid://cwnr7bis7uo27" path="res://Resources/big.tres" id="2_k8k4s"]
 [ext_resource type="LabelSettings" uid="uid://b6eaabn1l5qu1" path="res://Resources/medium.tres" id="3_pwxuv"]
 [ext_resource type="PackedScene" uid="uid://deb7182c7c35n" path="res://Scenes/value_handler.tscn" id="4_5vq6q"]
+[ext_resource type="Script" path="res://Scripts/survive_range.gd" id="5_wwotg"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_f08p7")
 
 [node name="Label" type="Label" parent="."]
@@ -41,6 +43,7 @@ offset_top = -20.0
 offset_bottom = 20.0
 grow_horizontal = 0
 grow_vertical = 2
+mouse_filter = 0
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
@@ -57,4 +60,93 @@ horizontal_alignment = 1
 [node name="Speed" parent="VBoxContainer" instance=ExtResource("4_5vq6q")]
 layout_mode = 2
 
+[node name="Label3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Neighborhood Size"
+label_settings = ExtResource("3_pwxuv")
+horizontal_alignment = 1
+
+[node name="Radius" parent="VBoxContainer" instance=ExtResource("4_5vq6q")]
+layout_mode = 2
+
+[node name="Slider" parent="VBoxContainer/Radius" index="0"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 1.0
+
+[node name="SpinBox" parent="VBoxContainer/Radius" index="1"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 1.0
+suffix = "r"
+
+[node name="Label4" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Survive Range"
+label_settings = ExtResource("3_pwxuv")
+horizontal_alignment = 1
+
+[node name="SurviveRange" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+script = ExtResource("5_wwotg")
+
+[node name="Min" parent="VBoxContainer/SurviveRange" instance=ExtResource("4_5vq6q")]
+layout_mode = 2
+
+[node name="Slider" parent="VBoxContainer/SurviveRange/Min" index="0"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 2.0
+
+[node name="SpinBox" parent="VBoxContainer/SurviveRange/Min" index="1"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 2.0
+suffix = ""
+
+[node name="Max" parent="VBoxContainer/SurviveRange" instance=ExtResource("4_5vq6q")]
+layout_mode = 2
+
+[node name="Slider" parent="VBoxContainer/SurviveRange/Max" index="0"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 3.0
+
+[node name="SpinBox" parent="VBoxContainer/SurviveRange/Max" index="1"]
+min_value = 1.0
+max_value = 10.0
+step = 1.0
+value = 3.0
+suffix = ""
+
+[node name="Clear" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 51
+text = "Clear"
+
 [connection signal="value_changed" from="VBoxContainer/Speed" to="." method="_on_speed_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Radius" to="." method="_on_radius_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Radius" to="VBoxContainer/SurviveRange" method="_on_radius_value_changed"]
+[connection signal="range_changed" from="VBoxContainer/SurviveRange" to="." method="_on_survive_range_changed"]
+[connection signal="value_changed" from="VBoxContainer/SurviveRange/Min" to="VBoxContainer/SurviveRange" method="_on_min_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/SurviveRange/Max" to="VBoxContainer/SurviveRange" method="_on_max_value_changed"]
+[connection signal="pressed" from="Clear" to="." method="_on_clear_pressed"]
+
+[editable path="VBoxContainer/Radius"]
+[editable path="VBoxContainer/SurviveRange/Min"]
+[editable path="VBoxContainer/SurviveRange/Max"]

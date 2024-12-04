@@ -63,7 +63,7 @@ func update_cells():
 					if check_pos in alive_cells:
 						neighbor_count += 1
 		if cell in alive_cells:
-			if neighbor_count in [2, 3]:
+			if neighbor_count in range(survive_range.x, survive_range.y + 1):
 				new_cell_pos.append(cell)
 		else:
 			if neighbor_count == 3:
@@ -90,3 +90,15 @@ func get_all_useful_cells() -> Array[Vector2i]:
 
 func _on_ui_speed_changed(speed: float) -> void:
 	speed_for_update = speed
+
+
+func _on_ui_clear() -> void:
+	$TileMap.clear()
+
+
+func _on_ui_radius_changed(radius: int) -> void:
+	check_radius = radius
+
+
+func _on_ui_survive_range_changed(new_range: Vector2i) -> void:
+	survive_range = new_range
