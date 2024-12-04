@@ -5,8 +5,14 @@ var playing = false:
 		playing = value
 		$CanvasLayer/UI.label.visible = !value
 
-var generation_update = 0.2
-var time_generation = 0.0
+var time_since_generation = 0.0
+
+var check_radius = 1
+var speed_for_update = 0.2
+# Ranges are stored as Vec2i, the x is min, y is max
+var survive_range = Vector2i(2, 3)
+var reproduction_range = Vector2i(3, 3)
+
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color(0,0,0))
@@ -23,10 +29,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if playing:
-		time_generation += delta
-		if time_generation >= generation_update:
+		time_since_generation += delta
+		if time_since_generation >= speed_for_update:
 			update_cells()
-			time_generation = 0.0
+			time_since_generation = 0.0
 
 func _process(_delta: float) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -38,6 +44,7 @@ func _process(_delta: float) -> void:
 		$TileMap.erase_cell(pixel_pos)
 
 	if Input.is_action_just_pressed("play"):
+		time_since_generation = 0.0
 		playing = !playing
 		print("Playing: ", playing)
 
@@ -47,8 +54,7 @@ func update_cells():
 	var calculating_cell_pos = get_all_useful_cells()
 	var new_cell_pos: Array[Vector2i] = []
 	for cell in calculating_cell_pos:
-		var radius = 1
-		var square = range(-radius, radius + 1)
+		var square = range(-check_radius, check_radius + 1)
 		var neighbor_count = 0
 		for x in square:
 			for y in square:
@@ -72,14 +78,15 @@ func get_all_useful_cells() -> Array[Vector2i]:
 	var alive_cells = tilemap.get_used_cells()
 	var final: Array[Vector2i] = alive_cells.duplicate()
 	for cell in alive_cells:
-		print(cell)
-		var radius = 1
-		var square = range(-radius, radius + 1)
+		var square = range(-check_radius, check_radius + 1)
 		for x in square:
 			for y in square:
 				var check_pos = cell + Vector2i(x, y)
 				if check_pos not in final:
 					final.append(check_pos)
 	
-	print(final)
 	return final
+
+
+func _on_ui_speed_changed(speed: float) -> void:
+	speed_for_update = speed
