@@ -66,7 +66,7 @@ func update_cells():
 			if neighbor_count in range(survive_range.x, survive_range.y + 1):
 				new_cell_pos.append(cell)
 		else:
-			if neighbor_count == 3:
+			if neighbor_count in range(reproduction_range.x, reproduction_range.y + 1):
 				new_cell_pos.append(cell)
 	
 	tilemap.clear()
@@ -102,3 +102,7 @@ func _on_ui_radius_changed(radius: int) -> void:
 
 func _on_ui_survive_range_changed(new_range: Vector2i) -> void:
 	survive_range = new_range
+
+
+func _on_ui_reproduction_range_changed(new_range: Vector2i) -> void:
+	reproduction_range = new_range
