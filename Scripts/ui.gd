@@ -1,7 +1,5 @@
 extends Control
 
-@onready var label: Label = $Label
-
 signal speed_changed(speed: float)
 signal radius_changed(radius: int)
 signal survive_range_changed(new_range: Vector2i)
@@ -34,3 +32,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 func _on_pause_pressed() -> void:
 	paused.emit()
+
+
+func _on_reset_pressed() -> void:
+	for i in $VBoxContainer/ScrollContainer/VBoxContainer.get_children():
+		if i.has_method("reset_to_default"):
+			i.call("reset_to_default")
