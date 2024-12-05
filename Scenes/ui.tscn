@@ -1,10 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cuvgqa6px7l7u"]
+[gd_scene load_steps=3 format=3 uid="uid://cuvgqa6px7l7u"]
 
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="1_f08p7"]
 [ext_resource type="LabelSettings" uid="uid://cwnr7bis7uo27" path="res://Resources/big.tres" id="2_k8k4s"]
-[ext_resource type="LabelSettings" uid="uid://b6eaabn1l5qu1" path="res://Resources/medium.tres" id="3_pwxuv"]
-[ext_resource type="PackedScene" uid="uid://deb7182c7c35n" path="res://Scenes/value_handler.tscn" id="4_5vq6q"]
-[ext_resource type="Script" path="res://Scripts/survive_range.gd" id="5_wwotg"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -60,132 +57,12 @@ layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="SettingsList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "Speed"
-label_settings = ExtResource("3_pwxuv")
-horizontal_alignment = 1
-
-[node name="Speed" parent="VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-default_value = 0.2
-
-[node name="Label3" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "Neighborhood Size"
-label_settings = ExtResource("3_pwxuv")
-horizontal_alignment = 1
-
-[node name="Radius" parent="VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-default_value = 1.0
-
-[node name="Slider" parent="VBoxContainer/ScrollContainer/VBoxContainer/Radius" index="0"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 1.0
-
-[node name="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/Radius" index="1"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 1.0
-suffix = "r"
-
-[node name="Label4" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "Survive Range"
-label_settings = ExtResource("3_pwxuv")
-horizontal_alignment = 1
-
-[node name="SurviveRange" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-script = ExtResource("5_wwotg")
-current_range = Vector2i(2, 3)
-default_value = Vector2i(2, 3)
-
-[node name="Min" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-
-[node name="Slider" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Min" index="0"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 2.0
-
-[node name="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Min" index="1"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 2.0
-suffix = ""
-
-[node name="Max" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-
-[node name="Slider" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Max" index="0"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-
-[node name="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Max" index="1"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-suffix = ""
-
-[node name="Label5" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "Reproduce Range"
-label_settings = ExtResource("3_pwxuv")
-horizontal_alignment = 1
-
-[node name="ReproductionRange" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-script = ExtResource("5_wwotg")
-current_range = Vector2i(3, 3)
-default_value = Vector2i(3, 3)
-
-[node name="Min" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-
-[node name="Slider" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Min" index="0"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-
-[node name="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Min" index="1"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-suffix = ""
-
-[node name="Max" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange" instance=ExtResource("4_5vq6q")]
-layout_mode = 2
-
-[node name="Slider" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Max" index="0"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-
-[node name="SpinBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Max" index="1"]
-min_value = 1.0
-max_value = 10.0
-step = 1.0
-value = 3.0
-suffix = ""
-
-[node name="Reset" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Reset" type="Button" parent="VBoxContainer/ScrollContainer/SettingsList"]
 layout_mode = 2
 text = "Reset"
 
@@ -205,21 +82,19 @@ mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 48
 text = "Clear"
 
-[connection signal="pressed" from="Pause" to="." method="_on_pause_pressed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/Speed" to="." method="_on_speed_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/Radius" to="." method="_on_radius_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/Radius" to="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" method="_on_radius_value_changed"]
-[connection signal="range_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" to="." method="_on_survive_range_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Min" to="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" method="_on_min_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Max" to="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange" method="_on_max_value_changed"]
-[connection signal="range_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange" to="." method="_on_reproduction_range_range_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Min" to="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange" method="_on_min_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Max" to="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange" method="_on_max_value_changed"]
-[connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/Reset" to="." method="_on_reset_pressed"]
-[connection signal="pressed" from="Clear" to="." method="_on_clear_pressed"]
+[node name="Dimensions" type="SpinBox" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 83.0625
+grow_vertical = 0
+min_value = 1.0
+max_value = 3.0
+value = 2.0
+suffix = "D"
 
-[editable path="VBoxContainer/ScrollContainer/VBoxContainer/Radius"]
-[editable path="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Min"]
-[editable path="VBoxContainer/ScrollContainer/VBoxContainer/SurviveRange/Max"]
-[editable path="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Min"]
-[editable path="VBoxContainer/ScrollContainer/VBoxContainer/ReproductionRange/Max"]
+[connection signal="pressed" from="Pause" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/SettingsList/Reset" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="Clear" to="." method="_on_clear_pressed"]

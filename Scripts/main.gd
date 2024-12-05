@@ -40,44 +40,7 @@ func _process(_delta: float) -> void:
 		var pixel_pos = $TileMap.local_to_map(get_global_mouse_position())
 		$TileMap.erase_cell(pixel_pos)
 
-func update_cells():
-	var tilemap: TileMapLayer = $TileMap
-	var alive_cells = tilemap.get_used_cells()
-	var calculating_cell_pos = get_all_useful_cells()
-	var new_cell_pos: Array[Vector2i] = []
-	for cell in calculating_cell_pos:
-		var square = range(-check_radius, check_radius + 1)
-		var neighbor_count = 0
-		for x in square:
-			for y in square:
-				var check_pos = cell + Vector2i(x, y)
-				if check_pos != cell:
-					if check_pos in alive_cells:
-						neighbor_count += 1
-		if cell in alive_cells:
-			if neighbor_count in range(survive_range.x, survive_range.y + 1):
-				new_cell_pos.append(cell)
-		else:
-			if neighbor_count in range(reproduction_range.x, reproduction_range.y + 1):
-				new_cell_pos.append(cell)
-	
-	tilemap.clear()
-	for i in new_cell_pos:
-		tilemap.set_cell(i, 0, Vector2i(0, 0))
 
-func get_all_useful_cells() -> Array[Vector2i]:
-	var tilemap: TileMapLayer = $TileMap
-	var alive_cells = tilemap.get_used_cells()
-	var final: Array[Vector2i] = alive_cells.duplicate()
-	for cell in alive_cells:
-		var square = range(-check_radius, check_radius + 1)
-		for x in square:
-			for y in square:
-				var check_pos = cell + Vector2i(x, y)
-				if check_pos not in final:
-					final.append(check_pos)
-	
-	return final
 
 
 func _on_ui_speed_changed(speed: float) -> void:

@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bauwoky2yjtba"]
+[gd_scene load_steps=9 format=3 uid="uid://bauwoky2yjtba"]
 
 [ext_resource type="Script" path="res://Scripts/main.gd" id="1_4s1q2"]
 [ext_resource type="Shader" path="res://Resources/white.gdshader" id="1_xwe34"]
 [ext_resource type="Texture2D" uid="uid://88knuobdec1r" path="res://Resources/pixel.png" id="2_1ig05"]
 [ext_resource type="PackedScene" uid="uid://cuvgqa6px7l7u" path="res://Scenes/ui.tscn" id="5_ixdv2"]
+[ext_resource type="PackedScene" uid="uid://dph7g5gi1tbmn" path="res://Scenes/main_3d.tscn" id="5_qvitj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ne3or"]
 shader = ExtResource("1_xwe34")
@@ -32,6 +33,8 @@ position_smoothing_speed = 30.0
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="UI" parent="CanvasLayer" instance=ExtResource("5_ixdv2")]
+
+[node name="3D" parent="." instance=ExtResource("5_qvitj")]
 
 [connection signal="clear" from="CanvasLayer/UI" to="." method="_on_ui_clear"]
 [connection signal="paused" from="CanvasLayer/UI" to="." method="_on_ui_paused"]
