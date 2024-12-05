@@ -22,16 +22,17 @@ func _ready() -> void:
 	default_settings = settings
 	
 	for i in settings:
-		#print(i.value_name, i.value)
+		print(i.value_name, i.value)
 		var new_label = Label.new()
 		new_label.text = i.value_name
 		$UI.list.add_child(new_label)
 		if (i is GOLSettingsFloat) or (i is GOLSettingsInt):
 			var value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
-			value_handler.set_step(0.1 if i is GOLSettingsFloat else 1.0)
+			value_handler.set_step(0.1 if (i is GOLSettingsFloat) else 1.0)
 			value_handler.set_ranges(i.value_range.x, i.value_range.y)
 			value_handler.default_value = i.value
 			value_handler.reset_to_default()
+			value_handler.set_values(i.value)
 			value_handler.value_changed.connect(func(new_value):
 				i.value = new_value
 				set(i.property_name, new_value)

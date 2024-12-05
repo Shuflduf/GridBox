@@ -20,6 +20,10 @@ func _on_slider_value_changed(value: float) -> void:
 	$SpinBox.value = value
 	value_changed.emit(value)
 
+func set_values(new_value: float):
+	for i in get_children():
+		i.value = new_value
+
 func reset_to_default():
 	for i in get_children():
 		i.value = default_value
