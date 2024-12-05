@@ -97,3 +97,4 @@ script = ExtResource("1_svn0l")
 
 [connection signal="clear" from="UI" to="." method="_on_ui_clear"]
 [connection signal="paused" from="UI" to="." method="_on_ui_paused"]
+[connection signal="reset" from="UI" to="." method="_on_ui_reset"]

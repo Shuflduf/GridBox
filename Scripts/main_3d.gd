@@ -21,7 +21,8 @@ var reproduction_range: Vector2i
 var value_handlers = {}
 
 func _ready() -> void:
-	default_settings = settings
+	for i in settings:
+		default_settings.append(i.duplicate(true))
 	
 	for i in settings:
 		print(i.value_name, i.value)
@@ -86,10 +87,16 @@ func get_radius_dependencies() -> Array[GOLSettingsBase]:
 	return settings.filter(func(setting: GOLSettingsBase):
 		return setting.property_name in ["survive_range", "reproduction_range"])
 
-func update_settings(new_settings: Array[GOLSettingsBase]):
+func update_settings(new_settings: Array[GOLSettingsBase], after_ready = false):
 	for i in new_settings:
 		i.clamp_value()
 		set(i.property_name, i.value)
+		if after_ready:
+			if i is GOLSettingsIVec2:
+				value_handlers[i.property_name + "x"].reset_to_default()
+				value_handlers[i.property_name + "y"].reset_to_default()
+			else:
+				value_handlers[i.property_name].reset_to_default()
 
 
 func _process(_delta: float) -> void:
@@ -163,3 +170,9 @@ func _on_ui_paused() -> void:
 
 func _on_ui_clear() -> void:
 	gridmap.clear()
+
+
+func _on_ui_reset() -> void:
+	settings = default_settings.duplicate(true)
+	update_settings(settings, true)
+	
