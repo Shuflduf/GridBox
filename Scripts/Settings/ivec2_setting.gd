@@ -3,12 +3,8 @@ extends GOLSettingsBase
 
 @export var value: Vector2i:
 	set(new):
-		value = clamp(new, range_min, range_max)
-@export var range_min: Vector2i:
+		value = clamp(new, Vector2i(range.x, range.x), Vector2i(range.y, range.y))
+@export var range: Vector2i:
 	set(new):
-		range_min = new
-		value = clamp(value, range_min, range_max)
-@export var range_max: Vector2i:
-	set(new):
-		range_max = new
-		value = clamp(new, range_min, range_max)
+		range = new
+		value = clamp(value, Vector2i(range.x, range.x), Vector2i(range.y, range.y))

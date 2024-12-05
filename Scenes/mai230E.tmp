@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id="Resource_7bc6w"]
 script = ExtResource("3_krkvc")
 value = 1
-range = Vector2i(1, 10)
+range = Vector2i(0, 0)
 value_name = "Radius"
 property_name = "check_radius"
 suffix = ""
@@ -19,7 +19,7 @@ suffix = ""
 [sub_resource type="Resource" id="Resource_bvfjd"]
 script = ExtResource("4_oqreg")
 value = 0.2
-range = Vector2(0.1, 1)
+range = Vector2(0, 0)
 value_name = "Speed"
 property_name = "speed_for_update"
 suffix = "s"
@@ -27,7 +27,7 @@ suffix = "s"
 [sub_resource type="Resource" id="Resource_tfxrk"]
 script = ExtResource("5_h63ay")
 value = Vector2i(2, 3)
-range = Vector2i(1, 10)
+range = Vector2i(0, 0)
 value_name = "Survive Range"
 property_name = "survive_range"
 suffix = ""
@@ -35,7 +35,7 @@ suffix = ""
 [sub_resource type="Resource" id="Resource_jdof3"]
 script = ExtResource("5_h63ay")
 value = Vector2i(3, 3)
-range = Vector2i(1, 10)
+range = Vector2i(0, 0)
 value_name = "Reproduction Range"
 property_name = "reproduction_range"
 suffix = ""

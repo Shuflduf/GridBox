@@ -80,6 +80,7 @@ size_flags_horizontal = 3
 
 [node name="Reset" type="Button" parent="VBoxContainer/ScrollContainer/SettingsList"]
 layout_mode = 2
+focus_mode = 0
 text = "Reset"
 
 [node name="Dimensions" type="SpinBox" parent="."]

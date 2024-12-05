@@ -28,18 +28,35 @@ func _ready() -> void:
 		$UI.list.add_child(new_label)
 		if (i is GOLSettingsFloat) or (i is GOLSettingsInt):
 			var value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
-			print(i.value)
 			value_handler.set_step(0.1 if i is GOLSettingsFloat else 1.0)
-			value_handler.set_ranges(i.range_min, i.range_max)
+			value_handler.set_ranges(i.range.x, i.range.y)
 			value_handler.default_value = i.value
 			value_handler.reset_to_default()
 			value_handler.value_changed.connect(func(new_value):
 				i.value = new_value
-				#print("Set ", i.property_name, " to ", new_value)
 				set(i.property_name, new_value)
-				#print(new_value)
 			)
 			$UI.list.add_child(value_handler)
+		elif i is GOLSettingsIVec2:
+			var min_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
+			var max_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
+			
+			for handler in [min_value_handler, max_value_handler]:
+				handler.set_step(1)
+				handler.set_ranges(i.range.x, i.range.y)
+				handler.reset_to_default()
+				$UI.list.add_child(handler)
+			min_value_handler.value_changed.connect(func(new_value):
+				var vec = get(i.property_name)
+				vec.x = new_value
+				set(i.property_name, vec)
+			)
+			
+			print(i.value)
+			min_value_handler.default_value = i.value.x
+			max_value_handler.default_value = i.value.y
+			min_value_handler.reset_to_default()
+			max_value_handler.reset_to_default()
 			
 	update_settings(settings)
 
@@ -61,7 +78,6 @@ func _physics_process(delta: float) -> void:
 	if playing:
 		time_since_generation += delta
 		if time_since_generation >= speed_for_update:
-			print("Run")
 			var new_cells = get_new_cells()
 			gridmap.clear()
 			for i in new_cells:
