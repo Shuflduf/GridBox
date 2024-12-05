@@ -34,6 +34,7 @@ position_smoothing_speed = 30.0
 [node name="UI" parent="CanvasLayer" instance=ExtResource("5_ixdv2")]
 
 [connection signal="clear" from="CanvasLayer/UI" to="." method="_on_ui_clear"]
+[connection signal="paused" from="CanvasLayer/UI" to="." method="_on_ui_paused"]
 [connection signal="radius_changed" from="CanvasLayer/UI" to="." method="_on_ui_radius_changed"]
 [connection signal="reproduction_range_changed" from="CanvasLayer/UI" to="." method="_on_ui_reproduction_range_changed"]
 [connection signal="speed_changed" from="CanvasLayer/UI" to="." method="_on_ui_speed_changed"]

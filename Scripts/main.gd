@@ -1,10 +1,6 @@
 extends Node2D
 
-var playing = false:
-	set(value):
-		playing = value
-		$CanvasLayer/UI.label.visible = !value
-
+var playing = false
 var time_since_generation = 0.0
 
 var check_radius = 1
@@ -43,11 +39,6 @@ func _process(_delta: float) -> void:
 	elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var pixel_pos = $TileMap.local_to_map(get_global_mouse_position())
 		$TileMap.erase_cell(pixel_pos)
-
-	if Input.is_action_just_pressed("play"):
-		time_since_generation = 0.0
-		playing = !playing
-		print("Playing: ", playing)
 
 func update_cells():
 	var tilemap: TileMapLayer = $TileMap
@@ -107,3 +98,9 @@ func _on_ui_survive_range_changed(new_range: Vector2i) -> void:
 
 func _on_ui_reproduction_range_changed(new_range: Vector2i) -> void:
 	reproduction_range = new_range
+
+
+func _on_ui_paused() -> void:
+	time_since_generation = 0.0
+	playing = !playing
+	print("Playing: ", playing)
