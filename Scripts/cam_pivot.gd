@@ -4,7 +4,7 @@ var last_mouse_position = Vector2()
 var dragging = false
 var initial_world_position = Vector3()
 
-var dimension = 2
+var dimension: int = 2
 
 func _unhandled_input(event: InputEvent) -> void:
 	if dimension == 2:
@@ -32,9 +32,21 @@ func _unhandled_input(event: InputEvent) -> void:
 				var world_position_before = get_project_position(mouse_position, 0)
 				var world_position_after = get_project_position(mouse_position, 0)
 				position += world_position_before - world_position_after
+	elif dimension == 3:
+		pass
+		
 
 func get_project_position(screen_position: Vector2, plane_y: float) -> Vector3:
 	var ray_origin = project_ray_origin(screen_position)
 	var ray_direction = project_ray_normal(screen_position)
 	var plane = Plane(Vector3(0, 1, 0), plane_y)
 	return plane.intersects_ray(ray_origin, ray_direction)
+
+
+func _on_ui_dimension_changed(new: int) -> void:
+	const TWO_D_POS = Vector3(0, 5, 0)
+	const THREE_D_POS = Vector3(0, 5, 5)
+	dimension = new
+	var tween = get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(self, "position", TWO_D_POS if new == 2 else THREE_D_POS, 0.5)
+	tween.parallel().tween_property(self, "rotation_degrees:x", -90 if new == 2 else -45, 0.5)

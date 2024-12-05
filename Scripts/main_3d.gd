@@ -17,6 +17,7 @@ var speed_for_update: float:
 		time_since_generation = 0.0
 var survive_range: Vector2i
 var reproduction_range: Vector2i
+var dimension: int = 2
 
 var value_handlers = {}
 
@@ -100,11 +101,12 @@ func update_settings(new_settings: Array[GOLSettingsBase], after_ready = false):
 
 
 func _process(_delta: float) -> void:
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-		gridmap.set_cell_item(mouse_world_pos(), -1)
-#
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		gridmap.set_cell_item(mouse_world_pos(), 0)
+	if dimension == 2:
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			gridmap.set_cell_item(mouse_world_pos(), -1)
+	#
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			gridmap.set_cell_item(mouse_world_pos(), 0)
 
 
 func _physics_process(delta: float) -> void:
@@ -123,7 +125,8 @@ func mouse_world_pos() -> Vector3i:
 	var ray_origin = camera.project_ray_origin(mouse_position)
 	var ray_direction = camera.project_ray_normal(mouse_position)
 	var plane = Plane(Vector3(0, 1, 0), 0)
-	var world_position = floor(plane.intersects_ray(ray_origin, ray_direction))
+	var t = plane.intersects_ray(ray_origin, ray_direction)
+	var world_position = floor(t) if t != null else Vector3.ZERO
 	return world_position
 
 func get_new_cells():
@@ -176,3 +179,7 @@ func _on_ui_reset() -> void:
 	settings = default_settings.duplicate(true)
 	update_settings(settings, true)
 	
+
+
+func _on_ui_dimension_changed(new: int) -> void:
+	dimension = new

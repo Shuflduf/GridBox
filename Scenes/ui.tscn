@@ -99,3 +99,4 @@ suffix = "D"
 [connection signal="pressed" from="Pause" to="." method="_on_pause_pressed"]
 [connection signal="pressed" from="Clear" to="." method="_on_clear_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/SettingsList/Reset" to="." method="_on_reset_pressed"]
+[connection signal="value_changed" from="Dimensions" to="." method="_on_dimensions_value_changed"]
