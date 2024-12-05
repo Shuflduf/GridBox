@@ -18,6 +18,8 @@ var speed_for_update: float:
 var survive_range: Vector2i
 var reproduction_range: Vector2i
 
+var value_handlers = {}
+
 func _ready() -> void:
 	default_settings = settings
 	
@@ -37,7 +39,10 @@ func _ready() -> void:
 				i.value = new_value
 				set(i.property_name, new_value)
 			)
+			if i.property_name == "check_radius":
+				value_handler.value_changed.connect(change_radius_dependencies)
 			$UI.list.add_child(value_handler)
+			value_handlers[i.property_name] = value_handler
 		elif i is GOLSettingsIVec2:
 			var min_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
 			var max_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
@@ -62,12 +67,28 @@ func _ready() -> void:
 			max_value_handler.default_value = i.value.y
 			min_value_handler.reset_to_default()
 			max_value_handler.reset_to_default()
+			value_handlers[i.property_name + "x"] = min_value_handler
+			value_handlers[i.property_name + "y"] = max_value_handler
 			
 	update_settings(settings)
 
+func change_radius_dependencies(new_radius):
+	var diam = ((2 * new_radius) + 1) ** 2
+	for i in get_radius_dependencies():
+		var ranges = [value_handlers[i.property_name + "x"], value_handlers[i.property_name + "y"]]
+		for j in ranges:
+			j.set_ranges(1, diam)
+		for s in settings:
+			if s.property_name == i.property_name:
+				s.value_range = Vector2i(1, diam)
+
+func get_radius_dependencies() -> Array[GOLSettingsBase]:
+	return settings.filter(func(setting: GOLSettingsBase):
+		return setting.property_name in ["survive_range", "reproduction_range"])
 
 func update_settings(new_settings: Array[GOLSettingsBase]):
 	for i in new_settings:
+		i.clamp_value()
 		set(i.property_name, i.value)
 
 
