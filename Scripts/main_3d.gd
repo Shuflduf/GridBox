@@ -29,7 +29,7 @@ func _ready() -> void:
 		if (i is GOLSettingsFloat) or (i is GOLSettingsInt):
 			var value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
 			value_handler.set_step(0.1 if i is GOLSettingsFloat else 1.0)
-			value_handler.set_ranges(i.range.x, i.range.y)
+			value_handler.set_ranges(i.value_range.x, i.value_range.y)
 			value_handler.default_value = i.value
 			value_handler.reset_to_default()
 			value_handler.value_changed.connect(func(new_value):
@@ -43,7 +43,7 @@ func _ready() -> void:
 			
 			for handler in [min_value_handler, max_value_handler]:
 				handler.set_step(1)
-				handler.set_ranges(i.range.x, i.range.y)
+				handler.set_ranges(i.value_range.x, i.value_range.y)
 				handler.reset_to_default()
 				$UI.list.add_child(handler)
 			min_value_handler.value_changed.connect(func(new_value):
@@ -51,8 +51,12 @@ func _ready() -> void:
 				vec.x = new_value
 				set(i.property_name, vec)
 			)
+			max_value_handler.value_changed.connect(func(new_value):
+				var vec = get(i.property_name)
+				vec.y = new_value
+				set(i.property_name, vec)
+			)
 			
-			print(i.value)
 			min_value_handler.default_value = i.value.x
 			max_value_handler.default_value = i.value.y
 			min_value_handler.reset_to_default()
