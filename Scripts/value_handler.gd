@@ -1,13 +1,16 @@
-class_name FloatValue
 extends HBoxContainer
 
 signal value_changed(new_value)
 var default_value: float
 
-func set_ranges(min: float, max: float):
-	for i in $Slider.get_children() + $SpinBox.get_children():
-		i.min_value = min
-		i.max_value = max
+func set_ranges(new_min: float, new_max: float):
+	for i in get_children():
+		i.min_value = new_min
+		i.max_value = new_max
+
+func set_step(new_step: float):
+	for i in get_children():
+		i.step = new_step
 
 func _on_spin_box_value_changed(value: float) -> void:
 	$Slider.value = value

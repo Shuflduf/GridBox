@@ -3,34 +3,50 @@ extends Node3D
 @onready var gridmap: GridMap = $GridMap
 @onready var camera: Camera3D = $Camera3D
 
-@export var settings: Array[GOLSettings]
-var default_settings: Array[GOLSettings]
+@export var settings: Array[GOLSettingsBase]
+var default_settings: Array[GOLSettingsBase]
 
 var time_since_generation = 0.0
 
 var playing = true
-var check_radius = 1
-var speed_for_update = 0.2
-# Ranges are stored as Vec2i, the x is min, y is max
-var survive_range = Vector2i(2, 3)
-var reproduction_range = Vector2i(3, 3)
+
+var check_radius: int
+var speed_for_update: float:
+	set(new):
+		speed_for_update = new
+		time_since_generation = 0.0
+var survive_range: Vector2i
+var reproduction_range: Vector2i
 
 func _ready() -> void:
 	default_settings = settings
+	
+	for i in settings:
+		#print(i.value_name, i.value)
+		var new_label = Label.new()
+		new_label.text = i.value_name
+		$UI.list.add_child(new_label)
+		if (i is GOLSettingsFloat) or (i is GOLSettingsInt):
+			var value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
+			print(i.value)
+			value_handler.set_step(0.1 if i is GOLSettingsFloat else 1.0)
+			value_handler.set_ranges(i.range_min, i.range_max)
+			value_handler.default_value = i.value
+			value_handler.reset_to_default()
+			value_handler.value_changed.connect(func(new_value):
+				i.value = new_value
+				#print("Set ", i.property_name, " to ", new_value)
+				set(i.property_name, new_value)
+				#print(new_value)
+			)
+			$UI.list.add_child(value_handler)
+			
 	update_settings(settings)
-	#for i in settings:
-		#var new_label = Label.new()
-		#new_label.text = i.value_name
-		#%SettingsList.add_child(new_label)
-		#match i.value_type:
-			#"float":
-				#var value_handler = FloatValue.new()
-				#value_handler.set_ranges()
 
 
-func update_settings(new_settings: Array[GOLSettings]):
+func update_settings(new_settings: Array[GOLSettingsBase]):
 	for i in new_settings:
-		set(i.property_name, i.value[0])
+		set(i.property_name, i.value)
 
 
 func _process(_delta: float) -> void:
@@ -45,6 +61,7 @@ func _physics_process(delta: float) -> void:
 	if playing:
 		time_since_generation += delta
 		if time_since_generation >= speed_for_update:
+			print("Run")
 			var new_cells = get_new_cells()
 			gridmap.clear()
 			for i in new_cells:
@@ -98,4 +115,9 @@ func get_all_useful_cells() -> Array[Vector3i]:
 
 
 func _on_ui_paused() -> void:
+	print(playing)
 	playing = !playing
+
+
+func _on_ui_clear() -> void:
+	gridmap.clear()

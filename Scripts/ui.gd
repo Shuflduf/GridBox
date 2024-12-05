@@ -2,7 +2,8 @@ extends Control
 
 signal paused
 signal clear
-signal value_changed(value_name: String, value: Variant)
+
+@onready var list: VBoxContainer = %SettingsList
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed("play"):
@@ -13,6 +14,9 @@ func _on_pause_pressed() -> void:
 
 
 func _on_reset_pressed() -> void:
-	for i in $VBoxContainer/ScrollContainer/VBoxContainer.get_children():
+	for i in list.get_children():
 		if i.has_method("reset_to_default"):
 			i.call("reset_to_default")
+
+func _on_clear_pressed() -> void:
+	clear.emit()
