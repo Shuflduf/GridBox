@@ -14,7 +14,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if dimension == 2:
 		if event is InputEventMouseMotion:
-			if dragging or Input.is_action_pressed("move"):
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) or Input.is_action_pressed("move"):
 				var new_world_position = get_project_position(event.position, 0)
 				var offset = initial_world_position - new_world_position
 				position += offset
@@ -27,12 +27,20 @@ func _unhandled_input(event: InputEvent) -> void:
 					initial_world_position = get_project_position(mouse_position, 0)
 				else:
 					dragging = false
-
-			elif event.button_index in [MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_UP]:
+			if event.button_index in [MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_UP]:
 				var mouse_position = get_viewport().get_mouse_position()
 				var world_position_before = get_project_position(mouse_position, 0)
 				var world_position_after = get_project_position(mouse_position, 0)
 				position += world_position_before - world_position_after
+
+		if Input.is_action_just_pressed("move") and not dragging:
+			dragging = true
+			initial_world_position = get_project_position(get_viewport().get_mouse_position(), 0)
+
+		if Input.is_action_just_released("move"):
+			dragging = false
+
+
 
 	elif dimension == 3:
 		if event is InputEventMouseMotion:
