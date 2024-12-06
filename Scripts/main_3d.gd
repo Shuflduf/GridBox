@@ -1,7 +1,7 @@
 extends Node3D
 
 @onready var gridmap: GridMap = $GridMap
-@onready var camera: Camera3D = $Camera3D
+@onready var camera: Camera3D = $CamPivot/Camera3D
 
 @export var settings: Array[GOLSettingsBase]
 var default_settings: Array[GOLSettingsBase]
@@ -24,7 +24,7 @@ var value_handlers = {}
 func _ready() -> void:
 	for i in settings:
 		default_settings.append(i.duplicate(true))
-	
+
 	for i in settings:
 		print(i.value_name, i.value)
 		var new_label = Label.new()
@@ -48,7 +48,7 @@ func _ready() -> void:
 		elif i is GOLSettingsIVec2:
 			var min_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
 			var max_value_handler = preload("res://Scenes/value_handler.tscn").instantiate()
-			
+
 			for handler in [min_value_handler, max_value_handler]:
 				handler.set_step(1)
 				handler.set_ranges(i.value_range.x, i.value_range.y)
@@ -64,14 +64,14 @@ func _ready() -> void:
 				vec.y = new_value
 				set(i.property_name, vec)
 			)
-			
+
 			min_value_handler.default_value = i.value.x
 			max_value_handler.default_value = i.value.y
 			min_value_handler.reset_to_default()
 			max_value_handler.reset_to_default()
 			value_handlers[i.property_name + "x"] = min_value_handler
 			value_handlers[i.property_name + "y"] = max_value_handler
-			
+
 	update_settings(settings)
 
 func change_radius_dependencies(new_radius):
@@ -101,12 +101,13 @@ func update_settings(new_settings: Array[GOLSettingsBase], after_ready = false):
 
 
 func _process(_delta: float) -> void:
-	if dimension == 2:
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			gridmap.set_cell_item(mouse_world_pos(), -1)
-	#
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			gridmap.set_cell_item(mouse_world_pos(), 0)
+
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+		gridmap.set_cell_item(mouse_world_pos(), -1)
+
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		print(mouse_world_pos().y)
+		gridmap.set_cell_item(mouse_world_pos(), 0)
 
 
 func _physics_process(delta: float) -> void:
@@ -126,7 +127,7 @@ func mouse_world_pos() -> Vector3i:
 	var ray_direction = camera.project_ray_normal(mouse_position)
 	var plane = Plane(Vector3(0, 1, 0), 0)
 	var t = plane.intersects_ray(ray_origin, ray_direction)
-	var world_position = floor(t) if t != null else Vector3.ZERO
+	var world_position = round(t) if t != null else Vector3.ZERO
 	return world_position
 
 func get_new_cells():
@@ -148,7 +149,7 @@ func get_new_cells():
 		else:
 			if neighbor_count in range(reproduction_range.x, reproduction_range.y + 1):
 				new_cell_pos.append(cell)
-	
+
 	return new_cell_pos
 
 
@@ -162,7 +163,7 @@ func get_all_useful_cells() -> Array[Vector3i]:
 				var check_pos = cell + Vector3i(x, 0, y)
 				if check_pos not in final:
 					final.append(check_pos)
-	
+
 	return final
 
 
@@ -178,7 +179,7 @@ func _on_ui_clear() -> void:
 func _on_ui_reset() -> void:
 	settings = default_settings.duplicate(true)
 	update_settings(settings, true)
-	
+
 
 
 func _on_ui_dimension_changed(new: int) -> void:
