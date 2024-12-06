@@ -17,9 +17,7 @@ func _on_pause_pressed() -> void:
 
 func _on_reset_pressed() -> void:
 	reset.emit()
-	#for i in list.get_children():
-		#if i.has_method("reset_to_default"):
-			#i.call("reset_to_default")
+
 
 func _on_clear_pressed() -> void:
 	clear.emit()
@@ -27,3 +25,4 @@ func _on_clear_pressed() -> void:
 
 func _on_dimensions_value_changed(value: float) -> void:
 	dimension_changed.emit(roundi(value))
+	$Dimensions.get_line_edit().release_focus()
