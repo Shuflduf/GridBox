@@ -2,8 +2,8 @@ extends Node3D
 
 @onready var gridmap: GridMap = $GridMap
 @onready var camera: Camera3D = $CamPivot/Camera3D
-
 @export var settings: Array[GOLSettingsBase]
+
 var default_settings: Array[GOLSettingsBase]
 
 var time_since_generation = 0.0
@@ -26,7 +26,6 @@ func _ready() -> void:
 		default_settings.append(i.duplicate(true))
 
 	for i in settings:
-		print(i.value_name, i.value)
 		var new_label = Label.new()
 		new_label.text = i.value_name
 		$UI.list.add_child(new_label)
@@ -74,6 +73,7 @@ func _ready() -> void:
 
 	update_settings(settings)
 
+
 func change_radius_dependencies(new_radius):
 	var diam = ((2 * new_radius) + 1) ** 2
 	for i in get_radius_dependencies():
@@ -84,9 +84,11 @@ func change_radius_dependencies(new_radius):
 			if s.property_name == i.property_name:
 				s.value_range = Vector2i(1, diam)
 
+
 func get_radius_dependencies() -> Array[GOLSettingsBase]:
 	return settings.filter(func(setting: GOLSettingsBase):
 		return setting.property_name in ["survive_range", "reproduction_range"])
+
 
 func update_settings(new_settings: Array[GOLSettingsBase], after_ready = false):
 	for i in new_settings:
@@ -101,12 +103,10 @@ func update_settings(new_settings: Array[GOLSettingsBase], after_ready = false):
 
 
 func _process(_delta: float) -> void:
-
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		gridmap.set_cell_item(mouse_world_pos(), -1)
 
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		print(mouse_world_pos().y)
 		gridmap.set_cell_item(mouse_world_pos(), 0)
 
 
@@ -129,6 +129,7 @@ func mouse_world_pos() -> Vector3i:
 	var t = plane.intersects_ray(ray_origin, ray_direction)
 	var world_position = round(t) if t != null else Vector3.ZERO
 	return world_position
+
 
 func get_new_cells():
 	var alive_cells = gridmap.get_used_cells()
@@ -168,7 +169,6 @@ func get_all_useful_cells() -> Array[Vector3i]:
 
 
 func _on_ui_paused() -> void:
-	print(playing)
 	playing = !playing
 
 
