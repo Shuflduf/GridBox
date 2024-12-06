@@ -127,7 +127,7 @@ func mouse_world_pos() -> Vector3i:
 	var ray_direction = camera.project_ray_normal(mouse_position)
 	var plane = Plane(Vector3(0, 1, 0), 0)
 	var t = plane.intersects_ray(ray_origin, ray_direction)
-	var world_position = round(t) if t != null else Vector3.ZERO
+	var world_position = floor(t) if t != null else Vector3.ZERO
 	return world_position
 
 
