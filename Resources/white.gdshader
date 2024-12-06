@@ -1,5 +1,5 @@
 shader_type canvas_item;
 
 void fragment() {
-	COLOR = vec4(1.0);
+	COLOR.xyz = vec3(1.0);
 }
